@@ -15,8 +15,26 @@ st.write(
 
 name_on_order = st.text_input('Name on Smoothie')
 st.write('The current name on your smoothie is', name_on_order)
-session = get_active_session()
 
+from snowflake.snowpark.session import Session  # Correct import
+
+# Initialize the session globally (make sure to replace with actual config)
+@st.cache_resource
+def init_session():
+    # Replace with your Snowflake connection details
+    snowflake_config = {
+        "account": "YOCPJOZ.OT93458",
+        "user": "BADGETHREE",
+        "password": "78bottleT",
+        "role": "SYSADMIN",
+        "warehouse": "COMPUTE_WH",
+        "database": "SMOOTHIES",
+        "schema": "PUBLIC"
+    }
+    return Session.builder.configs(snowflake_config).create()
+
+# Initialize the session once at the beginning
+session = init_session()
 
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 # st.dataframe(data=my_dataframe, use_container_width=True)
